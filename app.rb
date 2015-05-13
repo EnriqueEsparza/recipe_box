@@ -33,6 +33,7 @@ get '/recipes/:id' do
 end
 
 post '/recipes/:id' do
+  @categories = Category.all
   @recipe = Recipe.find(params.fetch("id").to_i)
   @ingredient = @recipe.ingredients.create(name: params.fetch("name"))
   @ingredients = @recipe.ingredients
@@ -40,6 +41,7 @@ post '/recipes/:id' do
 end
 
 patch '/recipes/:id' do
+  @categories = Category.all
   @recipe = Recipe.find(params.fetch("id").to_i)
   @instructions = params.fetch("instructions")
   @recipe.update(instructions: @instructions)
