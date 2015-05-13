@@ -1,1 +1,71 @@
 <h2><%= @recipe.title %></h2>
+
+<!--Update category for this recipe -->
+
+<form action="/recipes/<%= @recipe.id %>/categories" method="post">
+    <input type="hidden" name="_method" value="patch">
+      <div class="form-group">
+      <% @categories.each do |category| %>
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" name="category_ids[]" value="<%= category.id %>"><%= category.name%>
+          </label>
+        </div>
+      <% end %>
+    </div>
+    <button type="submit" class="btn btn-warning">Update</button>
+</form>
+
+
+<!-- Add instructions -->
+<form action="/recipes/<%= @recipe.id %>" method="post">
+  <div class="form-group">
+      <input type="hidden" name="_method" value="patch">
+    <label for="instructions">Enter instructions to make <%= @recipe.title %></label>
+    <textarea class="form-control" name="instructions" rows="10" required="" style="width: 50%;"></textarea>
+  </div>
+    <button type="submit" class="btn btn-primary">Add</button>
+</form>
+
+<hr>
+<!-- Add ingredient -->
+  <form action="/recipes/<%= @recipe.id %>" method="post">
+      <div class="form-group">
+          <label for="name">Add ingredient:</label>
+          <input class="form-control" style="width: 50%;" type="text" name="name" id="name">
+      </div>
+    <button name="submit" class="btn btn-primary">Add</button>
+</form>
+
+<hr>
+
+
+<h3> Categories:</h3>
+<% @recipe.categories.each do |category| %>
+  <ul>
+      <li> <%= category.name %> </li>
+  </ul>
+<% end %>
+
+
+<h3>Ingredients for <%= @recipe.title %></h3>
+<% if @ingredients.any? %>
+  <ul>
+    <% @ingredients.each do |ingredient| %>
+      <li><%= ingredient.name %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No current ingredients available.</p>
+<% end %>
+
+<h3>Recipe Instructions for <%= @recipe.title %></h3>
+<% if @recipe.instructions != nil %>
+  <p>
+    <%= @recipe.instructions %>
+  </p>
+  <% else %>
+  <p>
+      No instructions available.
+  </p>
+  <% end %>
