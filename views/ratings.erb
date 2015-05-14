@@ -1,0 +1,20 @@
+<h3>Recipes sorted by rating:</h3>
+
+<!-- <% @recipes.each do |recipe| %>
+
+
+
+<% end %> -->
+
+
+<% ratings = [] %>
+<% @recipes.each do |recipe| %>
+<% ratings.push(recipe) %>
+<% ratings.sort_by! {|k| k[:rating] } %>
+<% ratings = ratings.reverse %>
+<% end %>
+<ul>
+  <% ratings.each do |recipe| %>
+    <li><%= recipe.title %> (<%= recipe.rating %>stars) </li>
+  <% end %>
+</ul>

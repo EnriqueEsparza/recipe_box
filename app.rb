@@ -13,10 +13,6 @@ end
 post '/' do
   @recipes = Recipe.all
   @categories = Category.all
-
-  category_name = params.fetch("category")
-
-
   @recipe = Recipe.new(title: params.fetch("title"))
   if @recipe.save
     redirect to("/")
@@ -61,6 +57,20 @@ patch '/recipes/:id/categories' do
   erb(:recipe_info)
 end
 
+get '/recipes/:id/rating' do
+  @recipe = Recipe.find(params.fetch("id").to_i)
+  @ingredients = @recipe.ingredients
+  @categories = Category.all
+  erb(:recipe_info)
+end
+
+patch '/recipes/:id/rating' do
+  @recipe = Recipe.find(params.fetch("id").to_i)
+  rating = params.fetch("rating").to_i
+  @recipe.update(rating: rating)
+  redirect to "/recipes/#{@recipe.id}"
+end
+
 get '/categories/new' do
   erb(:categories)
 end
@@ -70,4 +80,36 @@ post '/category' do
   @recipes = Recipe.all
   @categories = Category.all
   erb(:index)
+end
+
+get '/view_categories' do
+  @categories=Category.all
+  erb(:view_categories)
+end
+
+get '/view_categories/:id' do
+  @category = Category.find(params.fetch("id").to_i)
+
+  erb(:view_categories_recipes)
+end
+
+delete '/:id/delete' do
+  @recipe = Recipe.find(params.fetch("id").to_i)
+  @recipe.ingredients.each do |ingredient|
+    ingredient.delete
+  end
+  @recipe.delete
+  redirect to '/'
+end
+
+delete '/view_categories' do
+  @categories = Category.all()
+  category = Category.find(params.fetch("categories_id").to_i)
+  category.delete
+  redirect to '/view_categories'
+end
+
+get '/ratings' do
+  @recipes = Recipe.all
+  erb(:ratings)
 end
