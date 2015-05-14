@@ -2,8 +2,8 @@
 
 
 <!-- Give rating -->
-<h4>Current Rating:</h4>
-    <%= @recipe.rating %>
+<h4>Rating:</h4>
+    <%= @recipe.rating %> Star(s)
   <!-- <% if @recipe.rating != nil %>
     <%= @recipe.rating %>
   <% else %>
@@ -54,15 +54,6 @@
     <button type="submit" class="btn btn-primary">Add</button>
 </form>
 
-<hr>
-<!-- Add ingredient -->
-  <form action="/recipes/<%= @recipe.id %>" method="post">
-      <div class="form-group">
-          <label for="name">Add ingredient:</label>
-          <input class="form-control" style="width: 50%;" type="text" name="name" id="name">
-      </div>
-    <button name="submit" class="btn btn-primary">Add</button>
-</form>
 
 <hr>
 
@@ -75,16 +66,35 @@
 <% end %>
 
 
+<!-- Current Ingredients -->
 <h3>Ingredients for <%= @recipe.title %></h3>
-<% if @ingredients.any? %>
+<% if @ingredients_for_recipe.any? %>
   <ul>
-    <% @ingredients.each do |ingredient| %>
+    <% @ingredients_for_recipe.each do |ingredient| %>
       <li><%= ingredient.name %></li>
     <% end %>
   </ul>
 <% else %>
   <p>No current ingredients available.</p>
 <% end %>
+
+
+
+<!-- Form for assigning ingredients -->
+<h3>Add Ingredients for <%= @recipe.title %></h3>
+  <form action="/recipes/<%= @recipe.id%>/ingredient" method="post">
+    <input type='hidden' name='_method' value="patch">
+      <div class"form-group">
+        <% @ingredients.each do |ingredient| %>
+        <div class="checkbox">
+          <label>
+              <input type="checkbox" name="ingredient_ids[]" value="<%= ingredient.id%>"><%= ingredient.name%>
+          </label>
+        </div>
+        <% end %>
+      </div>
+      <button type="submit" class="btn btn-primary">Add</button>
+</form>
 
 
 <h3>Recipe Instructions for <%= @recipe.title %></h3>

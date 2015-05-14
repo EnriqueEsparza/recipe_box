@@ -23,8 +23,9 @@ end
 
 get '/recipes/:id' do
   @recipe = Recipe.find(params.fetch("id").to_i)
-  @ingredients = @recipe.ingredients
+  @ingredients_for_recipe = @recipe.ingredients
   @categories = Category.all
+  @ingredients = Ingredient.all
   erb(:recipe_info)
 end
 
@@ -41,7 +42,6 @@ patch '/recipes/:id' do
   @recipe = Recipe.find(params.fetch("id").to_i)
   @instructions = params.fetch("instructions")
   @recipe.update(instructions: @instructions)
-  @ingredients = @recipe.ingredients
   erb(:recipe_info)
 end
 
@@ -95,9 +95,6 @@ end
 
 delete '/:id/delete' do
   @recipe = Recipe.find(params.fetch("id").to_i)
-  @recipe.ingredients.each do |ingredient|
-    ingredient.delete
-  end
   @recipe.delete
   redirect to '/'
 end
@@ -112,4 +109,38 @@ end
 get '/ratings' do
   @recipes = Recipe.all
   erb(:ratings)
+end
+
+get '/sort_by_ingredients' do
+  @ingredients = Ingredient.all
+  erb(:ingredients)
+end
+
+get '/recipe_ingredients/:id' do
+  @ingredient = Ingredient.find(params.fetch("id").to_i)
+  erb(:recipes_for_ingredient)
+end
+
+get '/ingredients' do
+  @ingredients = Ingredient.all
+  erb(:ingredients_edit)
+end
+
+post '/ingredients' do
+  Ingredient.create(name: params.fetch("name"))
+  redirect to '/ingredients'
+end
+
+patch '/recipes/:id/ingredient' do
+  @categories = Category.all
+  @ingredients = Ingredient.all
+  @recipe = Recipe.find(params.fetch("id").to_i)
+  @ingredients_for_recipe = @recipe.ingredients
+  selected_ingredients = params.fetch("ingredient_ids")
+
+  selected_ingredients.each do |ingredient_id|
+    new_ingredient = Ingredient.find(ingredient_id)
+    @recipe.ingredients.push(new_ingredient)
+  end 
+  erb(:recipe_info)
 end
