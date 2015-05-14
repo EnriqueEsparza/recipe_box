@@ -10,7 +10,7 @@
 <% ratings = [] %>
 <% @recipes.each do |recipe| %>
 <% ratings.push(recipe) %>
-<% ratings.sort_by! {|k| k[:rating] } %>
+<% ratings.sort_by! {|k| k[:ratings] } %>
 <% ratings = ratings.reverse %>
 <% end %>
 <ul>
